@@ -49,19 +49,20 @@ def compute_situation_expectations(ps, qs, prices, pays, bet_weights, n_hits):
     
     return situation_p, situation_exp
 
-def compute_wager_expectations(latest_p):
+def compute_wager_expectations(proababilities, prices, shares):
 
-    shares = np.ones(len(latest_p))
+    qs = 1 - proababilities
+    payouts = 1 - prices
 
     situations = []
 
-    for i in range(len(latest_p)+1):
+    for i in range(len(proababilities)+1):
         situation_p, situation_exp = compute_situation_expectations(
-            latest_p.myp.values, latest_p.myq.values, latest_p.mktq.values, latest_p.mktp.values, shares, i)
+            proababilities, qs, prices, payouts, shares, i)
         situations.append(
             dict(
                 hits=i,
-                hit_percent = i / len(latest_p),
+                hit_percent = i / len(proababilities),
                 hits_p = situation_p,
                 hits_exp = situation_exp
             )
