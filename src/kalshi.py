@@ -34,16 +34,14 @@ class Kalshi:
             email=self.config["KALSHI_EMAIL"], password=self.config["KALSHI_PASSWORD"]
         )
 
-        r = self.sess.post("https://trading-api.kalshi.com/v1/log_in", json=payload)
+        r = self.sess.post(f"{self.url}log_in", json=payload)
 
         self.auth = r.json()
         self.sess.headers.update({"Authorization": self.auth["token"]})
 
     def get_positions(self):
 
-        r = self.sess.get(
-            f"https://trading-api.kalshi.com/v1/users/{self.auth['user_id']}/positions"
-        )
+        r = self.sess.get(f"{self.url}users/{self.auth['user_id']}/positions")
 
         data = r.json()
         if self.pandas:
@@ -53,9 +51,7 @@ class Kalshi:
 
     def get_trades(self):
 
-        r = self.sess.get(
-            f"https://trading-api.kalshi.com/v1/users/{self.auth['user_id']}/trades"
-        )
+        r = self.sess.get(f"{self.url}users/{self.auth['user_id']}/trades")
 
         data = r.json()
         if self.pandas:
