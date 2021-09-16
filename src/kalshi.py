@@ -58,3 +58,18 @@ class Kalshi:
             return pd.DataFrame.from_records(data["trades"])
         else:
             return data
+
+    def get_market(self, market_id):
+
+        r = self.sess.get(f"{self.url}markets/{market_id}")
+
+        return r.json()
+
+    def select_markets(self, market_ids):
+
+        out = [self.get_market(market_id)["market"] for market_id in market_ids]
+
+        if self.pandas:
+            return pd.DataFrame.from_records(out)
+        else:
+            return out
