@@ -10,11 +10,12 @@ import itertools
 def prep_prices_csv(p):
 
     p[["yesPrice", "noPrice", "myBet"]] = p[["yesPrice", "noPrice", "myBet"]] / 100
+    p["symbol"] = p["symbol"].str.upper()
     p.date = pd.to_datetime(p.date, format="%Y%m%d")
 
-    idx = p.groupby(["symbol"])["date"].transform(max) == p["date"]
-    latest_p = p[idx]
-    latest_p = latest_p[~latest_p.myBet.isna()]
+    p_bet = p[~p.myBet.isna()]
+    idx = p_bet.groupby(["symbol"])["date"].transform(max) == p_bet["date"]
+    latest_p = p_bet[idx]
 
     latest_p["buyYes"] = latest_p.myBet > latest_p.yesPrice
 
@@ -34,7 +35,7 @@ def prep_prices_csv(p):
     return p, latest_p
 
 
-def compute_situation_expectations(ps, qs, prices, pays, bet_weights, n_hits):
+def compute_situation_expectations(ps, qs, prices, pays, n_hits):
     p_ix = np.arange(len(ps))
     flip_mask = np.stack(
         [np.isin(p_ix, i) for i in itertools.combinations(p_ix, n_hits)]
@@ -42,8 +43,6 @@ def compute_situation_expectations(ps, qs, prices, pays, bet_weights, n_hits):
 
     bet_ps = np.where(flip_mask, ps, qs)
     bet_pays = np.where(flip_mask, pays, -prices)
-
-    bet_pays = bet_pays * bet_weights
 
     outcome_ps = bet_ps.prod(axis=1)
     situation_p = outcome_ps.sum()
@@ -56,16 +55,16 @@ def compute_situation_expectations(ps, qs, prices, pays, bet_weights, n_hits):
     return situation_p, situation_exp
 
 
-def compute_wager_expectations(proababilities, prices, shares):
+def compute_wager_expectations(proababilities, prices, qtys):
 
     qs = 1 - proababilities
-    payouts = 1 - prices
+    payouts = qtys - prices
 
     situations = []
 
     for i in range(len(proababilities) + 1):
         situation_p, situation_exp = compute_situation_expectations(
-            proababilities, qs, prices, payouts, shares, i
+            proababilities, qs, prices, payouts, i
         )
         situations.append(
             dict(
