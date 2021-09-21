@@ -34,7 +34,7 @@ def prep_market_columns(markets):
         "previous_price",
     ]
     markets[price_col] = markets[price_col] / 100
-    markets['no_ask'] = 1 - markets.yes_bid
+    markets["no_ask"] = 1 - markets.yes_bid
 
     return markets
 
