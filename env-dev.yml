@@ -1,0 +1,11 @@
+name: preds
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - jupyterlab
+  - pandas
+  - python-dotenv
+  - black
+  - matplotlib
+prefix: /home/zack/miniconda3/envs/preds
