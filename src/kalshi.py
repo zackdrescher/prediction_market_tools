@@ -23,6 +23,22 @@ def merge_bets(positions, bets):
     return positions
 
 
+def prep_market_columns(markets):
+
+    price_col = [
+        "yes_bid",
+        "yes_ask",
+        "last_price",
+        "previous_yes_bid",
+        "previous_yes_ask",
+        "previous_price",
+    ]
+    markets[price_col] = markets[price_col] / 100
+    markets['no_ask'] = 1 - markets.yes_bid
+
+    return markets
+
+
 class Kalshi:
 
     config_keys = ["KALSHI_EMAIL", "KALSHI_PASSWORD"]
@@ -83,12 +99,31 @@ class Kalshi:
 
         return r.json()
 
+    def get_market_by_ticker(self, ticker):
+
+        r = self.sess.get(f"{self.url}markets_by_ticker/{ticker}")
+
+        return r.json()
+
+    def select_markets_by_ticker(self, tickers):
+
+        out = [self.get_market_by_ticker(ticker)["market"] for ticker in tickers]
+
+        if self.pandas:
+            df = pd.DataFrame.from_records(out)
+            df = prep_market_columns(df)
+            return df
+        else:
+            return out
+
     def select_markets(self, market_ids):
 
         out = [self.get_market(market_id)["market"] for market_id in market_ids]
 
         if self.pandas:
-            return pd.DataFrame.from_records(out)
+            df = pd.DataFrame.from_records(out)
+            df = prep_market_columns(df)
+            return df
         else:
             return out
 
@@ -104,11 +139,8 @@ class Kalshi:
             right_on="id",
         )
         positions = positions[positions.status == "active"]
-        positions["mrkt_prob"] = (
-            positions.last_price.where(
-                positions.position > 0, 100 - positions.last_price
-            )
-            / 100
+        positions["mrkt_prob"] = positions.last_price.where(
+            positions.position > 0, 1 - positions.last_price
         )
 
         return positions
