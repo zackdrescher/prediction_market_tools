@@ -8,6 +8,21 @@ import requests
 import pandas as pd
 
 
+def merge_bets(positions, bets):
+
+    positions = positions.merge(
+        bets[["symbol", "myBet"]],
+        how="left",
+        left_on="ticker_name",
+        right_on="symbol",
+    )
+    positions["myBet"] = positions.myBet.where(
+        positions.position > 0, 1 - positions.myBet
+    )
+
+    return positions
+
+
 class Kalshi:
 
     config_keys = ["KALSHI_EMAIL", "KALSHI_PASSWORD"]
@@ -45,7 +60,10 @@ class Kalshi:
 
         data = r.json()
         if self.pandas:
-            return pd.DataFrame.from_records(data["market_positions"])
+            df = pd.DataFrame.from_records(data["market_positions"])
+            df["qty"] = df.position.where(df.position > 0, -df.position)
+            df.position_cost = df.position_cost / 100
+            return df
         else:
             return data
 
@@ -73,3 +91,24 @@ class Kalshi:
             return pd.DataFrame.from_records(out)
         else:
             return out
+
+    def get_open_positions(self):
+
+        positions = self.get_positions()
+        markets = self.select_markets(positions.market_id)
+
+        positions = positions.merge(
+            markets[["id", "ticker_name", "last_price", "status"]],
+            how="left",
+            left_on="market_id",
+            right_on="id",
+        )
+        positions = positions[positions.status == "active"]
+        positions["mrkt_prob"] = (
+            positions.last_price.where(
+                positions.position > 0, 100 - positions.last_price
+            )
+            / 100
+        )
+
+        return positions
