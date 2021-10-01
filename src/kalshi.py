@@ -8,7 +8,7 @@ import requests
 import pandas as pd
 
 
-def merge_bets(positions, bets):
+def merge_bets_into_postions(positions, bets):
 
     positions = positions.merge(
         bets[["symbol", "myBet"]],
