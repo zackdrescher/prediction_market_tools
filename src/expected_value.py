@@ -12,6 +12,7 @@ def prep_prices_csv(p):
     p[["yesPrice", "noPrice", "myBet"]] = p[["yesPrice", "noPrice", "myBet"]] / 100
     p["symbol"] = p["symbol"].str.upper()
     p.date = pd.to_datetime(p.date, format="%Y%m%d")
+    p['age'] = pd.to_datetime("today") - p.date
 
     p_bet = p[~p.myBet.isna()]
     idx = p_bet.groupby(["symbol"])["date"].transform(max) == p_bet["date"]
