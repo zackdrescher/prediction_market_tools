@@ -36,6 +36,15 @@ def prep_market_columns(markets):
     markets[price_col] = markets[price_col] / 100
     markets["no_ask"] = 1 - markets.yes_bid
 
+    date_col = [
+        "list_date",
+        "create_date",
+        "open_date",
+        "close_date",
+        "expiration_date"
+    ]
+    markets[date_col] = markets[date_col].apply(pd.to_datetime)
+
     return markets
 
 
