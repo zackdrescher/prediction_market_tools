@@ -1,15 +1,10 @@
 """Utilities for kalshi API."""
 
-import os
-
-import dotenv
 import kalshi_python
 
+from .kalshi_settings import KalshiSettings
 
-def get_kalshi_api_from_env() -> kalshi_python.ApiClient:
+
+def get_kalshi(settings: KalshiSettings) -> kalshi_python.ApiClient:
     """Get kalshi API key from environment vairables."""
-    dotenv.load_dotenv()
-    return kalshi_python.ApiClient(
-        email=os.getenv("KALSHI_EMAIL"),
-        password=os.getenv("KALSHI_PASSWORD"),
-    )
+    return kalshi_python.ApiClient(**settings.model_dump())
