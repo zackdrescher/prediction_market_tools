@@ -1,8 +1,8 @@
 """Utility functions for working with dates and times."""
 
-from datetime import datetime
+import datetime
 
 
-def now_utc() -> datetime:
+def now_utc() -> datetime.datetime:
     """Get the current datetime in UTC."""
-    return datetime.now(datetime.timezone.utc)
+    return datetime.datetime.now(datetime.timezone.utc)

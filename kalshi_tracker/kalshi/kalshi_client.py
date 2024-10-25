@@ -58,7 +58,7 @@ class KalshiClient:
         threshold_in_seconds = THRESHOLD_IN_MILLISECONDS / 1000
         if now - self.last_api_call < timedelta(microseconds=threshold_in_microseconds):
             time.sleep(threshold_in_seconds)
-        self.last_api_call = now_utc
+        self.last_api_call = now_utc()
 
     def post(self, path: str, body: dict) -> Response:
         """POST to an authenticated Kalshi HTTP endpoint.
