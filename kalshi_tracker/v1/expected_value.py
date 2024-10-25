@@ -1,14 +1,12 @@
 #!/usr/bin/env python
-# coding: utf-8
-
-import pandas as pd
-import numpy as np
 
 import itertools
 
+import numpy as np
+import pandas as pd
+
 
 def prep_prices_csv(p):
-
     p[["yesPrice", "noPrice", "myBet"]] = p[["yesPrice", "noPrice", "myBet"]] / 100
     p["symbol"] = p["symbol"].str.upper()
     p.date = pd.to_datetime(p.date, format="%Y%m%d").dt.tz_localize(tz="US/Eastern")
@@ -23,8 +21,7 @@ def prep_prices_csv(p):
     def get_probs(row):
         if row.buyYes:
             return [row.yesPrice, row.myBet]
-        else:
-            return [row.noPrice, 1 - row.myBet]
+        return [row.noPrice, 1 - row.myBet]
 
     latest_p[["mktp", "myp"]] = latest_p.apply(get_probs, axis=1, result_type="expand")
     latest_p[["mktq", "myq"]] = 1 - latest_p[["mktp", "myp"]]
@@ -39,7 +36,7 @@ def prep_prices_csv(p):
 def compute_situation_expectations(ps, qs, prices, pays, n_hits):
     p_ix = np.arange(len(ps))
     flip_mask = np.stack(
-        [np.isin(p_ix, i) for i in itertools.combinations(p_ix, n_hits)]
+        [np.isin(p_ix, i) for i in itertools.combinations(p_ix, n_hits)],
     )
 
     bet_ps = np.where(flip_mask, ps, qs)
@@ -57,7 +54,6 @@ def compute_situation_expectations(ps, qs, prices, pays, n_hits):
 
 
 def compute_wager_expectations(proababilities, prices, qtys):
-
     qs = 1 - proababilities
     payouts = qtys - prices
 
@@ -65,15 +61,19 @@ def compute_wager_expectations(proababilities, prices, qtys):
 
     for i in range(len(proababilities) + 1):
         situation_p, situation_exp = compute_situation_expectations(
-            proababilities, qs, prices, payouts, i
+            proababilities,
+            qs,
+            prices,
+            payouts,
+            i,
         )
         situations.append(
-            dict(
-                hits=i,
-                hit_percent=i / len(proababilities),
-                hits_p=situation_p,
-                hits_exp=situation_exp,
-            )
+            {
+                "hits": i,
+                "hit_percent": i / len(proababilities),
+                "hits_p": situation_p,
+                "hits_exp": situation_exp,
+            },
         )
 
     situations = pd.DataFrame.from_records(situations)

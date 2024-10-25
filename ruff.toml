@@ -1,2 +1,6 @@
+fix = true
+
 [lint]
 select = ["ALL"]
+
+ignore=["D202", "S113", "EM101", "TRY003"]

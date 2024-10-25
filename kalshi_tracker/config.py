@@ -2,14 +2,14 @@
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from kalshi_tracker.kalshi.kalshi_settings import KalshiSettings
+from kalshi_tracker.kalshi.kalshi_settings import KalshiLoginSettings
 
 
 class Settings(BaseSettings):
     """Base settings for the project."""
 
     # Kalshi API settings
-    kalshi: KalshiSettings
+    kalshi: KalshiLoginSettings
 
     # loads config fron .env file
     model_config = SettingsConfigDict(
