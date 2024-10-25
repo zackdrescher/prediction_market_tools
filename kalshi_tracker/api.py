@@ -5,13 +5,17 @@ from typing import Annotated
 
 from fastapi import Depends, FastAPI
 
-from .config import Settings
+from kalshi_tracker.config import Settings
 
 app = FastAPI()
 
 
 @lru_cache
 def get_settings() -> Settings:
+    """Get settings from the environment.
+
+    This function is cached to prevent multiple calls to the environment.
+    """
     return Settings()
 
 
