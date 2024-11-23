@@ -18,8 +18,8 @@ class Settings(BaseSettings):
     """Base settings for the project."""
 
     # Kalshi API settings
-    kalshi_login: KalshiLoginSettings | None
-    kalshi_keys: KalshiKeySettings | None
+    kalshi_login: KalshiLoginSettings | None = None
+    kalshi_keys: KalshiKeySettings | None = None
 
     # loads config fron .env file
     model_config = SettingsConfigDict(

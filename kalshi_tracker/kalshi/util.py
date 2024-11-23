@@ -1,34 +1,22 @@
 """Utilities for kalshi API."""
 
-import kalshi_python
-from kalshi_python.models import LoginRequest
-
-from .kalshi_settings import KalshiLoginSettings
+from .kalshi_client import ExchangeClient
+from .kalshi_settings import KalshiKeySettings
 
 
-def get_kalshi() -> kalshi_python.ApiInstance:
+def get_kalshi() -> ExchangeClient:
     """Get kalshi API key from environment vairables."""
-    from kalshi_tracker.config import Settings
+    from kalshi_tracker import config
 
-    settings = Settings()
-    return kalshi_python.ApiInstance(settings)
+    settings = config.Settings()
+
+    return get_kalshi_from_settings(settings.kalshi_keys)
 
 
-def get_kalshi_from_settings(
-    settings: KalshiLoginSettings,
-) -> kalshi_python.ApiInstance:
-    """Get kalshi API key from environment vairables."""
-    config = kalshi_python.Configuration()
-    config.host = settings.host
-
-    api = kalshi_python.ApiInstance(
-        email=settings.email,
-        password=settings.password,
-        configuration=config,
+def get_kalshi_from_settings(settings: KalshiKeySettings) -> ExchangeClient:
+    """Get kalshi API client from key settings."""
+    return ExchangeClient(
+        exchange_api_base=settings.host,
+        key_id=settings.key,
+        private_key=settings.secret,
     )
-
-    # login
-    login = api.login(LoginRequest(email=settings.email, password=settings.password))
-    api.set_api_token(login.token)
-
-    return api

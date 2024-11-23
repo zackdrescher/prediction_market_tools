@@ -6,7 +6,9 @@ from pathlib import Path
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
-from pydantic import BaseModel
+from pydantic import BaseModel, computed_field
+
+from kalshi_tracker.config import Settings
 
 
 class KalshiLoginSettings(BaseModel):
@@ -17,7 +19,7 @@ class KalshiLoginSettings(BaseModel):
     host: str = "api.elections.kalshi.com/trade-api/v2"
 
 
-def load_private_key_from_file(file_path: str | Path) -> serialization.PrivateKeyTypes:
+def load_private_key_from_file(file_path: str | Path) -> str:
     """Load a private key from a file."""
 
     with Path(file_path).open("rb") as key_file:
@@ -32,9 +34,15 @@ class KalshiKeySettings(BaseModel):
     """Key Based Auth Settings for the Kalshi API."""
 
     key: str
-    secret_file: str
-    host: str = "api.elections.kalshi.com/trade-api/v2"
+    key_file: str
+    host: str = "https://api.elections.kalshi.com/trade-api/v2"
 
-    def __post_init__(self) -> None:
-        """Load the secret key from the file."""
-        self.secret = load_private_key_from_file(self.secret_file)
+    @computed_field
+    @property
+    def secret(self) -> str:
+        """Load the private key from the key file."""
+        return load_private_key_from_file(self.key_file)
+
+
+# update the settings model which refeernces these types
+Settings.model_rebuild()
