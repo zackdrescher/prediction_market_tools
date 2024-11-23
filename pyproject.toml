@@ -19,7 +19,11 @@ ipykernel = "^6.29.5"
 ruff = "^0.6.9"
 requests = "^2.32.3"
 pandas = "^2.2.3"
+mypy = "^1.13.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+plugins = ['pydantic.mypy']

@@ -10,6 +10,9 @@ def get_kalshi() -> ExchangeClient:
 
     settings = config.Settings()
 
+    if settings.kalshi_keys is None:
+        raise ValueError("Kalshi keys are not set")
+
     return get_kalshi_from_settings(settings.kalshi_keys)
 
 
