@@ -7,9 +7,7 @@ from pathlib import Path
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
-from pydantic import BaseModel, computed_field
-
-from kalshi_tracker.config import Settings
+from pydantic import BaseModel, ConfigDict, computed_field
 
 
 class KalshiLoginSettings(BaseModel):
@@ -49,11 +47,4 @@ class KalshiKeySettings(BaseModel):
         """Load the private key from the key file."""
         return load_private_key_from_file(self.key_file)
 
-    class Config:
-        """Pydantic model configuration."""
-
-        arbitrary_types_allowed = True
-
-
-# update the settings model which refeernces these types
-Settings.model_rebuild()
+    model_config = ConfigDict(arbitrary_types_allowed=True)
