@@ -7,9 +7,8 @@ from typing import Self
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from kalshi_tracker.kalshi.kalshi_settings import (
+from kalshi_tracker.kalshi.settings import (
     KalshiKeySettings,
-    KalshiLoginSettings,
 )
 
 
@@ -17,7 +16,7 @@ class Settings(BaseSettings):
     """Base settings for the project."""
 
     # Kalshi API settings
-    kalshi_login: KalshiLoginSettings | None = None
+    kalshi_login: KalshiKeySettings | None = None
     kalshi_keys: KalshiKeySettings | None = None
 
     # loads config fron .env file

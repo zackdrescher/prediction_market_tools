@@ -1,7 +1,7 @@
 """Utilities for kalshi API."""
 
 from .kalshi_client import ExchangeClient
-from .kalshi_settings import KalshiKeySettings
+from .settings.key_settings import KalshiKeySettings
 
 
 def get_kalshi() -> ExchangeClient:

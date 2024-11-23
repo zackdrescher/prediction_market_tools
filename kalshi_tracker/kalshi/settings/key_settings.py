@@ -1,4 +1,4 @@
-"""Settings for the Kalshi API."""
+"""Key Settings for the Kalshi API."""
 
 from __future__ import annotations
 
@@ -8,14 +8,6 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPrivateKey
 from pydantic import BaseModel, ConfigDict, computed_field
-
-
-class KalshiLoginSettings(BaseModel):
-    """Login Auth Settings for the Kalshi API."""
-
-    email: str
-    password: str
-    host: str = "api.elections.kalshi.com/trade-api/v2"
 
 
 def load_private_key_from_file(file_path: str | Path) -> RSAPrivateKey:
