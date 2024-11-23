@@ -4,3 +4,6 @@ fix = true
 select = ["ALL"]
 
 ignore=["D202", "S113", "EM101", "TRY003"]
+
+[lint.per-file-ignores]
+"tests/*" = ["F841", "ARG001"]

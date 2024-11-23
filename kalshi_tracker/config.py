@@ -2,16 +2,15 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Self
+from typing import Self
 
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-if TYPE_CHECKING:
-    from kalshi_tracker.kalshi.kalshi_settings import (
-        KalshiKeySettings,
-        KalshiLoginSettings,
-    )
+from kalshi_tracker.kalshi.kalshi_settings import (
+    KalshiKeySettings,
+    KalshiLoginSettings,
+)
 
 
 class Settings(BaseSettings):
