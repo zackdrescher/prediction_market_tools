@@ -2,18 +2,18 @@
 
 from __future__ import annotations
 
+import json
 from typing import TYPE_CHECKING
-
-from cryptography.hazmat.primitives.asymmetric import rsa
 
 from .kalshi_client import KalshiClient
 
 if TYPE_CHECKING:
+    from cryptography.hazmat.primitives.asymmetric import rsa
     from requests.models import Response
 
 
 class ExchangeClient(KalshiClient):
-    """A client that allows utils to call authenticated Kalshi Exchange API endpoints."""
+    """A client that calls authenticated Kalshi Exchange API endpoints."""
 
     def __init__(
         self,

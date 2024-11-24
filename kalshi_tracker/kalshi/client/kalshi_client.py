@@ -61,7 +61,7 @@ class KalshiClient:
             time.sleep(threshold_in_seconds)
         self.last_api_call = now_utc()
 
-    def post(self, path: str, body: dict) -> Response:
+    def post(self, path: str, body: str | None = None) -> Response:
         """POST to an authenticated Kalshi HTTP endpoint.
 
         Returns the response body. Raises an HttpError on non-2XX results.
@@ -93,7 +93,12 @@ class KalshiClient:
         self.raise_if_bad_response(response)
         return response.json()
 
-    def delete(self, path: str, params: dict[str, Any] | None = None) -> Response:
+    def delete(
+        self,
+        path: str,
+        params: dict[str, Any] | None = None,
+        body: str | None = None,
+    ) -> Response:
         """DELETE from an authenticated Kalshi HTTP endpoint.
 
         Returns the response body. Raises an HttpError on non-2XX results.
@@ -106,6 +111,7 @@ class KalshiClient:
             self.host + path,
             headers=self.request_headers("DELETE", path),
             params=params,
+            data=body,
         )
         self.raise_if_bad_response(response)
         return response.json()
