@@ -6,4 +6,4 @@ select = ["ALL"]
 ignore=["D202", "S113", "EM101", "TRY003"]
 
 [lint.per-file-ignores]
-"tests/*" = ["F841", "ARG001", "S101", "S106", "S105", "PGH003", "PLR2004"]
+"tests/*" = ["F841", "ARG001", "S101", "S106", "S105", "PGH003", "PLR2004", "F811"]
