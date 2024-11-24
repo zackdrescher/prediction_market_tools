@@ -6,8 +6,11 @@ from typing import Annotated
 from fastapi import Depends, FastAPI
 
 from kalshi_tracker.config import Settings
+from kalshi_tracker.router import router
 
 app = FastAPI()
+
+app.include_router(router)
 
 
 @lru_cache

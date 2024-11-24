@@ -1,6 +1,9 @@
-"""Utilities for kalshi API."""
+"""Factory Methods for kalshi API."""
 
-from .kalshi_client import ExchangeClient
+from __future__ import annotations
+
+from .client.exchange_client import ExchangeClient
+from .keys import load_private_key_from_file
 from .settings.key_settings import KalshiKeySettings
 
 
@@ -18,8 +21,11 @@ def get_kalshi() -> ExchangeClient:
 
 def get_kalshi_from_settings(settings: KalshiKeySettings) -> ExchangeClient:
     """Get kalshi API client from key settings."""
+
+    private_key = load_private_key_from_file(settings.key_file)
+
     return ExchangeClient(
         exchange_api_base=settings.host,
         key_id=settings.key,
-        private_key=settings.secret,
+        private_key=private_key,
     )

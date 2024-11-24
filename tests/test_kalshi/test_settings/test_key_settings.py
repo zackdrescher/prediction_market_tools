@@ -9,8 +9,8 @@ from cryptography.hazmat.primitives.asymmetric import dh, rsa
 from pydantic import ValidationError
 from pytest_mock import MockerFixture
 
+from kalshi_tracker.kalshi.keys import load_private_key_from_file
 from kalshi_tracker.kalshi.settings import KalshiKeySettings
-from kalshi_tracker.kalshi.settings.key_settings import load_private_key_from_file
 
 
 def test_key_settings__no_settings__raises_validation_error() -> None:
@@ -26,21 +26,6 @@ def test_key_settings__valid_settings__returns_settings() -> None:
     assert settings.key == "test"
     assert settings.key_file == "test"
     assert settings.host == "https://api.elections.kalshi.com/trade-api/v2"
-
-
-def test_key_settings__secret__returns_secret(mocker: MockerFixture) -> None:
-    """Test the key settings secret."""
-    mock_rsa_private_key = mocker.Mock(spec=rsa.RSAPrivateKey)
-    key_func = mocker.patch(
-        "kalshi_tracker.kalshi.settings.key_settings.load_private_key_from_file",
-        return_value=mock_rsa_private_key,
-    )
-
-    settings = KalshiKeySettings(key="test", key_file="test")
-    key_func.assert_not_called()
-
-    assert settings.secret == mock_rsa_private_key
-    key_func.assert_called_once_with("test")
 
 
 def test_load_private_key_from_file__valid_key__successful(
