@@ -4,6 +4,10 @@ version = "0.0.1"
 description = ""
 authors = ["Zack Drescher <zackryandrescher@gmail.com>"]
 readme = "README.md"
+packages = [
+    { include = "kalshi_tracker" }
+]
+
 
 [tool.poetry.dependencies]
 python = "^3.11"
