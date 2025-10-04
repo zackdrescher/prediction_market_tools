@@ -1,0 +1,33 @@
+
+kalshi {
+
+    trades -> markets {
+        source-arrowhead: *
+        target-arrowhead: 1
+    }
+    trades -> accounts {
+        source-arrowhead: *
+        target-arrowhead: 1
+    }
+    orderbook -> markets {
+        source-arrowhead: *
+        target-arrowhead: 1
+    }
+    markets -> events {
+        source-arrowhead: *
+        target-arrowhead: 1
+    }
+    positions -> accounts {
+        source-arrowhead: *
+        target-arrowhead: 1
+    }
+    positions -> markets {
+        source-arrowhead: 1
+        target-arrowhead: 1
+    }
+}
+
+app.predictions -> kalshi.markets {
+    source-arrowhead: *
+    target-arrowhead: 1
+}
